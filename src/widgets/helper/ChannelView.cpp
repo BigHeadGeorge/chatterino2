@@ -1405,9 +1405,9 @@ void ChannelView::mouseReleaseEvent(QMouseEvent *event)
             return;
         }
     }
-    else
+    else if (event->button() != Qt::MiddleButton)
     {
-        // not left or right button
+        // not left, middle or right button
         return;
     }
     // find message
@@ -1509,6 +1509,20 @@ void ChannelView::handleMouseClick(QMouseEvent *event,
             }
         }
         break;
+        case Qt::MiddleButton: {
+            auto &link = hoveredElement->getLink();
+            if (link.type == Link::Url)
+            {
+                if (supportsIncognitoLinks())
+                {
+                    openLinkIncognito(link.value);
+                }
+                else
+                {
+                    QDesktopServices::openUrl(QUrl(link.value));
+                }
+            }
+        }
         default:;
     }
 }
